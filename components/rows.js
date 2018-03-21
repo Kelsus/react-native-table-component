@@ -1,6 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { View, ViewPropTypes, Text, StyleSheet } from 'react-native';
+import {
+  View,
+  ViewPropTypes,
+  Text,
+  StyleSheet,
+  TouchableWithoutFeedback
+} from "react-native";
 import Cell from './cell';
 
 class Row extends Component {
@@ -13,7 +19,7 @@ class Row extends Component {
   }
 
   render() {
-    const {data, style, widthArr, height, flexArr, textStyle, borderStyle} = this.props;
+    const {data, style, widthArr, height, flexArr, textStyle, borderStyle, onPress} = this.props;
     let widthNum = 0;
     if (widthArr) {
       for(let i=0; i<widthArr.length; i++) {
@@ -24,20 +30,22 @@ class Row extends Component {
 
     return (
       data ?
-      <View style={[
-        height && {height: height},
-        widthNum && {width: widthNum},
-        styles.row,
-        style
-      ]}>
-        {
-          data.map((item, i) => {
-            const flex = flexArr && flexArr[i];
-            const width = widthArr && widthArr[i];
-            return <Cell key={i} data={item} width={width} height={height} flex={flex} textStyle={textStyle} borderStyle={borderStyle}/>
-          })
-        }
-      </View>
+      <TouchableWithoutFeedback onPress={onPress}>
+        <View style={[
+          height && {height: height},
+          widthNum && {width: widthNum},
+          styles.row,
+          style
+        ]}>
+          {
+            data.map((item, i) => {
+              const flex = flexArr && flexArr[i];
+              const width = widthArr && widthArr[i];
+              return <Cell key={i} data={item} width={width} height={height} flex={flex} textStyle={textStyle} borderStyle={borderStyle}/>
+            })
+          }
+        </View>
+      </TouchableWithoutFeedback>
       : null
     )
   }
@@ -53,7 +61,7 @@ class Rows extends Component {
   }
 
   render() {
-    const {data, style, widthArr, heightArr, flexArr, textStyle, borderStyle} = this.props;
+    const { data, style, widthArr, heightArr, flexArr, textStyle, borderStyle, onPress } = this.props;
     let flexNum = 0, widthNum = 0;
     if (flexArr) {
       for(let i=0; i<flexArr.length; i++) {
@@ -75,7 +83,7 @@ class Rows extends Component {
         {
           data.map((item, i) => {
             const height = heightArr && heightArr[i];
-            return <Row key={i} data={item} widthArr={widthArr} height={height} flexArr={flexArr} style={style} textStyle={textStyle} borderStyle={borderStyle}/>
+            return <Row key={i} data={item} widthArr={widthArr} height={height} flexArr={flexArr} style={style} textStyle={textStyle} borderStyle={borderStyle} onPress={() => { onPress(item, i) }} />;
           })
         }
       </View>
