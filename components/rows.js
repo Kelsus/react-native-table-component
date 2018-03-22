@@ -5,7 +5,7 @@ import {
   ViewPropTypes,
   Text,
   StyleSheet,
-  TouchableWithoutFeedback
+  TouchableOpacity
 } from "react-native";
 import Cell from './cell';
 
@@ -19,7 +19,7 @@ class Row extends Component {
   }
 
   render() {
-    const {data, style, widthArr, height, flexArr, textStyle, borderStyle, onPress} = this.props;
+    const {data, style, widthArr, height, flexArr, textStyle, borderStyle, onPress, itemId} = this.props;
     let widthNum = 0;
     if (widthArr) {
       for(let i=0; i<widthArr.length; i++) {
@@ -30,7 +30,7 @@ class Row extends Component {
 
     return (
       data ?
-      <TouchableWithoutFeedback onPress={onPress}>
+      <TouchableOpacity onPress={() => { onPress(data, itemId) }} disabled={!onPress} >
         <View style={[
           height && {height: height},
           widthNum && {width: widthNum},
@@ -45,7 +45,7 @@ class Row extends Component {
             })
           }
         </View>
-      </TouchableWithoutFeedback>
+      </TouchableOpacity>
       : null
     )
   }
@@ -83,7 +83,7 @@ class Rows extends Component {
         {
           data.map((item, i) => {
             const height = heightArr && heightArr[i];
-            return <Row key={i} data={item} widthArr={widthArr} height={height} flexArr={flexArr} style={style} textStyle={textStyle} borderStyle={borderStyle} onPress={() => { onPress(item, i) }} />;
+            return <Row key={i} itemId={i} data={item} widthArr={widthArr} height={height} flexArr={flexArr} style={style} textStyle={textStyle} borderStyle={borderStyle} onPress={onPress} />;
           })
         }
       </View>
